@@ -1,0 +1,19 @@
+{
+  "name": "book-catalog-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tusharRajput45/book-catalog-Managemnt-System.git"
+  },
+  "author": "TUshar Rajput",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tusharRajput45/book-catalog-Managemnt-System/issues"
+  },
+  "homepage": "https://github.com/tusharRajput45/book-catalog-Managemnt-System#readme"
+}
