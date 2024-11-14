@@ -1,4 +1,8 @@
 const BOOK = require("../model/book-model");
+const nodemailer=require('nodemailer')
+const fs = require("fs");
+const path = require("path");
+
 
 const addBook = async (req, resp) => {
   console.log(req.body);
@@ -77,10 +81,56 @@ const editBook=async(req,resp)=>{
     resp.status(400).json({ error: error.message });
   }
 }
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "noreply.quiz.minds@gmail.com", // Replace with your email
+    pass: "zkrvhjlpczbfwsaq",        // Replace with your email password or app-specific password
+  },
+});
+const sendPDF = async (req, res) => {
+  try {
+    // Ensure a file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    // Construct the file path
+    const filePath = path.join(__dirname, "../uploads", req.file.filename);
+
+    // Set up email options
+    const mailOptions = {
+      from: "noreply.quiz.minds@gmail.com",      // Sender address
+      to: "sanjay@docg.ai",         // Recipient address
+      subject: "Your PDF Attachment",
+      text: "Please find the attached PDF document.",
+      attachments: [
+        {
+          filename: req.file.originalname,       // Original filename
+          path: filePath,                        // Path to the PDF
+        },
+      ],
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    // Delete the file from the server after sending the email
+    fs.unlinkSync(filePath);
+
+    // Respond with success
+    res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+};
+
 module.exports = {
   addBook,
   allBooks,
   getBook,
   editBook,
   deleteBook,
+  sendPDF
 };
